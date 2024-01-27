@@ -1,0 +1,33 @@
+# import
+
+# add a new column with year and month
+export['year_month'] = export['event_timestamp'].dt.to_period('M')
+
+# comprehensive frequency for each event in each year_month
+export.groupby(['year_month','event_name'])['customer_id'].nunique()
+
+# or manually group for each interested event
+begin_checkout = export[export['event_name'] == 'begin_checkout']
+begin_checkout.groupby('year_month')
+
+# time series line plot
+cart_month = add_to_cart.groupby('year_month')['account_id'].nunique()
+cart_month.plot()
+
+checkout_month = begin_checkout.groupby('year_month')['account_id'].nunique()
+checkout_month.plot()
+
+order_month = place_order.groupby('year_month')['account_id'].nunique()
+order_month.plot()
+
+order2_month = place_order2.groupby('year_month')['account_id'].nunique()
+order2_month.plot()
+
+shipped_month = order_shipped.groupby('year_month')['account_id'].nunique()
+shipped_month.plot()
+
+plt.legend(['Add to Cart', 'Begin Checkout', 'Place Order Phone', 'Place Order Web', 'Order Shipped'])
+
+plt.xlabel('Year-Month')
+plt.ylabel('Number of Unique Accounts IDs')
+plt.title('Ideal Journeys Over Time')
